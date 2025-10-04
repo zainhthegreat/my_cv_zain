@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CV - Zain Hassan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            left: -0.5rem;
+            top: 0.25rem;
+            transform: translateX(-50%);
+            background-color: #e2e8f0;
+            border: 3px solid #f8fafc;
+        }
+        .timeline-item:hover::before {
+            background-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700">
+    <!-- Chosen Palette: Warm Neutrals with Blue Accent -->
+    <!-- Application Structure Plan: A thematic, single-page application structure was chosen to provide a narrative-driven yet exploratory user experience. The flow starts with a high-level summary (Hero), moves to an interactive Skills Dashboard for targeted exploration, then presents a chronological Career Journey via a visual timeline. This structure allows recruiters to either follow the narrative or directly query experiences based on skills, which is a primary user task. This is more efficient than a linear document, as it answers specific queries (e.g., "show me AWS experience") instantly. The user flow is designed to be non-linear and user-driven. -->
+    <!-- Visualization & Content Choices: 
+        - Skills List -> Interactive Skill Tags -> Interaction: Filtering. Justification: Transforms a passive list into an active tool for recruiters to validate experience against job requirements. Method: Vanilla JS with data attributes.
+        - Experience Section -> Vertical Interactive Timeline -> Interaction: Click to expand details. Justification: Visually represents career progression and chronology more effectively than a list, while keeping the UI clean by hiding details until requested. Method: HTML/CSS with Vanilla JS for toggling visibility.
+        - Core Skills Overview -> Doughnut Chart -> Interaction: Hover tooltips. Justification: Provides a quick, high-level visual breakdown of expertise areas. It acts as a visual anchor and demonstrates modern web capabilities. Library: Chart.js (Canvas).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl sm:text-5xl font-bold text-slate-900">Zain Hassan</h1>
+            <p class="mt-2 text-xl text-blue-600">Senior Flutter & AWS Developer</p>
+            <div class="mt-4 flex justify-center items-center space-x-4 text-sm">
+                <a href="mailto:zainhthegreat@gmail.com" class="text-slate-500 hover:text-blue-600 transition">zainhthegreat@gmail.com</a>
+                <span class="text-slate-300">|</span>
+                <a href="https://www.linkedin.com/in/zain-hassan-18b845216" target="_blank" class="text-slate-500 hover:text-blue-600 transition">linkedin.com/in/zain-hassan-18b845216</a>
+                <span class="text-slate-300">|</span>
+                <span class="text-slate-500">Dubai, United Arab Emirates</span>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-1 space-y-8">
+                <section id="summary" class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-lg font-bold text-slate-900 border-b pb-2 mb-4">Professional Summary</h2>
+                    <p class="text-sm leading-relaxed">
+                        A Senior Flutter and AWS Developer with a proven history of end-to-end product ownership, from migrating large-scale native applications to establishing robust cloud data pipelines. Combines deep expertise in Material Design 3 and cross-platform development with a systems-level approach to design, informed by interests in computational neuroscience. Adept at leading cross-functional teams to deliver high-performance, accessible, and scalable mobile and web solutions.
+                    </p>
+                </section>
+
+                <section id="skills" class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-lg font-bold text-slate-900 border-b pb-2 mb-4">Core Skills Dashboard</h2>
+                    <p class="text-sm mb-4 text-slate-500">Click a skill to filter my career journey below.</p>
+                    <div class="chart-container" style="position: relative; height:250px; width:100%; max-width: 400px; margin: 0 auto 2rem auto;">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                    <div id="skills-container" class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-sm mb-2 text-slate-800">Mobile & Web</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <button data-skill="Flutter" class="skill-tag">Flutter</button>
+                                <button data-skill="Dart" class="skill-tag">Dart</button>
+                                <button data-skill="Material Design 3" class="skill-tag">Material Design 3</button>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-sm mb-2 text-slate-800">Cloud & Data</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <button data-skill="AWS" class="skill-tag">AWS</button>
+                                <button data-skill="Amplify" class="skill-tag">Amplify</button>
+                                <button data-skill="BigQuery" class="skill-tag">BigQuery</button>
+                                <button data-skill="Docker" class="skill-tag">Docker</button>
+                                <button data-skill="Firebase" class="skill-tag">Firebase</button>
+                                <button data-skill="Grafana" class="skill-tag">Grafana</button>
+                            </div>
+                        </div>
+                         <div>
+                            <h3 class="font-semibold text-sm mb-2 text-slate-800">AI & Compliance</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <button data-skill="Agentic AI" class="skill-tag">Agentic AI</button>
+                                <button data-skill="AML/KYC" class="skill-tag">AML/KYC</button>
+                            </div>
+                        </div>
+                         <div>
+                            <h3 class="font-semibold text-sm mb-2 text-slate-800">Leadership & Design</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <button data-skill="Leadership" class="skill-tag">Leadership</button>
+                                <button data-skill="Figma" class="skill-tag">Figma</button>
+                            </div>
+                        </div>
+                        <button id="clear-filter" class="w-full mt-4 bg-slate-200 text-slate-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-300 transition hidden">Clear Filter</button>
+                    </div>
+                </section>
+                
+                 <section id="education" class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-lg font-bold text-slate-900 border-b pb-2 mb-4">Education & Certifications</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-slate-800">National University of Computer and Emerging Sciences (FAST-NUCES)</h3>
+                            <p class="text-sm">B.S. Computer Science | 2018 – 2021</p>
+                        </div>
+                        <ul class="space-y-2 text-sm list-disc list-inside">
+                            <li><a href="https://courses.edx.org/certificates/06c041fa67ba4d9797c594b37d032b45" target="_blank" class="text-blue-600 hover:underline">MCB80.1x: Fundamentals of Neuroscience, Part 1</a></li>
+                            <li><a href="https://courses.edx.org/certificates/4ebc591052694cf48dfde9fc6691a4fa" target="_blank" class="text-blue-600 hover:underline">Neuroscience Educational Webinar Series (NEWS)</a></li>
+                            <li><a href="https://courses.edx.org/certificates/456f12ff75c84f8fa9f198abaf2285c9" target="_blank" class="text-blue-600 hover:underline">AWS Developer — Building on AWS</a></li>
+                            <li><a href="https://www.coursera.org/account/accomplishments/certificate/GEGCB89WDYDB" target="_blank" class="text-blue-600 hover:underline">What is Data Science? — Coursera</a></li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="lg:col-span-2">
+                <section id="experience" class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-lg font-bold text-slate-900 border-b pb-2 mb-4">Career Journey</h2>
+                    <div id="timeline-container" class="relative border-l-2 border-slate-200 pl-8 space-y-10">
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const experienceData = [
+            {
+                role: "Technical Lead (Contract)",
+                company: "Pallatus Los Angeles",
+                period: "Mar 2024 – Present",
+                location: "Remote/USA",
+                link: "https://pallatus-la.com",
+                skills: ["Leadership", "Flutter", "Amplify", "AWS", "Material Design 3", "Figma"],
+                details: [
+                    "Spearheaded a new engineering team, establishing agile methodologies, code review processes, and weekly 'teach & learn' sessions to elevate team-wide technical expertise.",
+                    "Architected and implemented a new Material 3 form-editing framework to standardize clinical documentation across web and mobile platforms (Flutter, AWS Amplify).",
+                    "Guiding the product towards a planned Oct 2025 launch, with a roadmap to integrate AI-driven narration for clinical form assistance."
+                ]
+            },
+            {
+                role: "Senior Flutter Developer",
+                company: "Drops",
+                period: "Aug 2022 – Present",
+                location: "Dubai, United Arab Emirates",
+                skills: ["Flutter", "Material Design 3", "AWS", "Docker", "BigQuery", "Grafana"],
+                details: [
+                    "Led the end-to-end migration of a production native application (iOS/Android) to Flutter, ensuring full alignment with Material Design 3 standards from architecture to store release.",
+                    "Engineered and executed a complex legacy data migration from Microsoft SQL & SFCC to AWS Redshift, utilizing Docker for `.bak` ingestion and establishing weekly data pipelines.",
+                    "Architected a scalable Data Warehouse with frequent snapshots and integrated Grafana for comprehensive, real-time monitoring and business intelligence.",
+                    "Pioneered the strategic re-platforming of the data warehouse from Amazon Redshift to Google BigQuery, aligning data infrastructure with broader company goals."
+                ]
+            },
+            {
+                role: "AI Engineer (Compliance)",
+                company: "TwoApps",
+                period: "Feb 2024 – Aug 2024",
+                location: "Remote",
+                skills: ["Agentic AI", "AML/KYC"],
+                details: [
+                    "Engineered an agentic AI system to automate compliance and onboarding workflows, processing scanned documents to extract key fields and cross-check against AML/KYC policies.",
+                    "Implemented heuristics for detecting data spoofing and forgery, significantly improving fraud detection and risk scoring for new account openings."
+                ]
+            },
+            {
+                role: "Co‑Founder",
+                company: "Petmera",
+                period: "Jan 2023 – Jan 2024",
+                location: "Dubai",
+                link: "https://petmera.com",
+                skills: ["Flutter", "Material Design 3", "AWS", "Figma", "Leadership"],
+                details: [
+                    "Founded and built a cross-platform pet-care application from concept to a fully functional product using Figma, Flutter (Material 3), and an AWS backend.",
+                    "Led technical development, investor outreach, and go-to-market strategy preparation."
+                ]
+            },
+            {
+                role: "Lead Flutter Engineer",
+                company: "Drive Tajeer",
+                period: "Jun 2023 – Sep 2023",
+                location: "Dubai",
+                skills: ["Flutter", "Agentic AI"],
+                details: [
+                    "Successfully built and shipped a B2B rental car marketplace app to the Google Play Store and Apple App Store, achieving a successful launch within a 4-month timeframe.",
+                    "Implemented an AI-assisted data acquisition feature to normalize regional car inventory data, improving the accuracy and comprehensiveness of the platform's listings."
+                ]
+            },
+            {
+                role: "Flutter – AWS Developer",
+                company: "Litte",
+                period: "Jan 2022 – Aug 2022",
+                location: "Los Angeles, CA, USA",
+                skills: ["Flutter", "AWS", "Amplify", "Firebase"],
+                details: [
+                    "Developed the primary Flutter front-end, integrating with GraphQL APIs and managing cloud infrastructure on AWS Amplify, ECS, and Firebase."
+                ]
+            },
+            {
+                role: "Flutter Developer",
+                company: "ZHAVIA TECH",
+                period: "Aug 2020 – Dec 2021",
+                location: "Islamabad, Pakistan",
+                skills: ["Flutter", "AWS", "Firebase"],
+                details: [
+                    "Developed two major applications: an Uber-like ride-sharing platform and a Clubhouse-style social audio app, utilizing Flutter with AWS and Firebase backends."
+                ]
+            }
+        ];
+
+        const timelineContainer = document.getElementById('timeline-container');
+        const skillsContainer = document.getElementById('skills-container');
+        const clearFilterBtn = document.getElementById('clear-filter');
+        
+        const renderTimeline = (filterSkill = null) => {
+            timelineContainer.innerHTML = '';
+            const filteredData = filterSkill 
+                ? experienceData.filter(item => item.skills.includes(filterSkill))
+                : experienceData;
+
+            if (filteredData.length === 0) {
+                 timelineContainer.innerHTML = `<p class="text-slate-500">No experience found for the selected skill.</p>`;
+                 return;
+            }
+
+            filteredData.forEach((item, index) => {
+                const linkHTML = item.link ? `<a href="${item.link}" target="_blank" class="text-blue-600 hover:underline text-sm">${item.company}</a>` : `<span class="text-sm">${item.company}</span>`;
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item relative';
+                timelineItem.dataset.skills = item.skills.join(',');
+                
+                timelineItem.innerHTML = `
+                    <div class="cursor-pointer">
+                        <h3 class="font-bold text-slate-900">${item.role}</h3>
+                        <div class="flex items-center space-x-2 text-slate-500 mb-1">
+                            ${linkHTML}
+                            <span>•</span>
+                            <span class="text-sm">${item.location}</span>
+                        </div>
+                        <p class="text-xs font-medium text-slate-400">${item.period}</p>
+                    </div>
+                    <div class="details-panel overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                        <ul class="mt-4 space-y-2 text-sm list-disc list-inside text-slate-600">
+                            ${item.details.map(d => `<li>${d}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                timelineContainer.appendChild(timelineItem);
+            });
+            
+            // Add event listeners for expand/collapse
+             timelineContainer.querySelectorAll('.cursor-pointer').forEach(header => {
+                header.addEventListener('click', () => {
+                    const panel = header.nextElementSibling;
+                    const alreadyOpen = panel.style.maxHeight && panel.style.maxHeight !== '0px';
+                    
+                    timelineContainer.querySelectorAll('.details-panel').forEach(p => p.style.maxHeight = '0px');
+
+                    if (!alreadyOpen) {
+                        panel.style.maxHeight = panel.scrollHeight + "px";
+                    }
+                });
+            });
+        };
+
+        skillsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('skill-tag')) {
+                const selectedSkill = e.target.dataset.skill;
+                
+                // Update UI state
+                document.querySelectorAll('.skill-tag').forEach(tag => {
+                    tag.classList.remove('bg-blue-600', 'text-white');
+                    tag.classList.add('bg-slate-100', 'text-slate-600');
+                });
+                e.target.classList.add('bg-blue-600', 'text-white');
+                e.target.classList.remove('bg-slate-100', 'text-slate-600');
+                
+                clearFilterBtn.classList.remove('hidden');
+                
+                renderTimeline(selectedSkill);
+            }
+        });
+
+        clearFilterBtn.addEventListener('click', () => {
+             document.querySelectorAll('.skill-tag').forEach(tag => {
+                tag.classList.remove('bg-blue-600', 'text-white');
+                tag.classList.add('bg-slate-100', 'text-slate-600');
+            });
+            clearFilterBtn.classList.add('hidden');
+            renderTimeline();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.skill-tag').forEach(tag => {
+                tag.classList.add('bg-slate-100', 'text-slate-600', 'px-3', 'py-1', 'rounded-full', 'text-xs', 'font-medium', 'hover:bg-blue-500', 'hover:text-white', 'transition', 'cursor-pointer');
+            });
+            renderTimeline();
+
+            // Chart.js implementation
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Mobile & Web', 'Cloud & Data', 'AI & Compliance', 'Leadership & Design'],
+                    datasets: [{
+                        label: 'Skill Categories',
+                        data: [3, 6, 2, 2],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)', // blue-500
+                            'rgba(16, 185, 129, 0.8)', // emerald-500
+                            'rgba(239, 68, 68, 0.8)', // red-500
+                            'rgba(249, 115, 22, 0.8)' // orange-500
+                        ],
+                        borderColor: '#f8fafc',
+                        borderWidth: 4,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                boxWidth: 12,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            padding: 10,
+                            cornerRadius: 4,
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
