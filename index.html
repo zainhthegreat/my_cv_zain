@@ -10,9 +10,102 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --accent: #3b82f6;
+            --accent-2: #6366f1;
+            --accent-3: #10b981;
+            --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
         body {
             font-family: 'Inter', sans-serif;
+            position: relative;
         }
+
+        /* ---------- Living aurora background ---------- */
+        .bg-aurora {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bg-aurora::before,
+        .bg-aurora::after,
+        .bg-aurora span {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.42;
+            will-change: transform;
+        }
+        .bg-aurora::before {
+            width: 46vw; height: 46vw;
+            background: radial-gradient(circle at center, rgba(59,130,246,0.6), transparent 70%);
+            top: -12vw; left: -8vw;
+            animation: drift1 22s ease-in-out infinite;
+        }
+        .bg-aurora::after {
+            width: 40vw; height: 40vw;
+            background: radial-gradient(circle at center, rgba(99,102,241,0.55), transparent 70%);
+            bottom: -14vw; right: -6vw;
+            animation: drift2 26s ease-in-out infinite;
+        }
+        .bg-aurora span {
+            width: 36vw; height: 36vw;
+            background: radial-gradient(circle at center, rgba(16,185,129,0.45), transparent 70%);
+            top: 38%; left: 52%;
+            animation: drift3 30s ease-in-out infinite;
+        }
+        @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(8vw,6vw) scale(1.15); } }
+        @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-7vw,-5vw) scale(1.1); } }
+        @keyframes drift3 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-6vw,4vw) scale(1.2); } 66% { transform: translate(5vw,-3vw) scale(0.92); } }
+
+        /* ---------- Hero entrance ---------- */
+        .hero-in {
+            opacity: 0;
+            transform: translateY(26px);
+            animation: heroRise 0.9s var(--spring) forwards;
+        }
+        @keyframes heroRise { to { opacity: 1; transform: translateY(0); } }
+        .hero-name {
+            background: linear-gradient(110deg, #0f172a 18%, #2563eb 40%, #6366f1 55%, #0f172a 78%);
+            background-size: 220% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: heroRise 0.9s var(--spring) forwards, shimmer 6s linear 0.9s infinite;
+        }
+        @keyframes shimmer { to { background-position: -220% center; } }
+
+        /* ---------- Scroll reveal ---------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(42px) scale(0.985);
+            transition: opacity 0.7s ease, transform 0.7s var(--spring);
+            transition-delay: var(--d, 0s);
+            will-change: opacity, transform;
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* ---------- Timeline ---------- */
+        .timeline-track::after {
+            content: '';
+            position: absolute;
+            left: -2px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-2), var(--accent-3));
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 1.3s ease;
+        }
+        .timeline-track.is-visible::after { transform: scaleY(1); }
+
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -21,22 +114,102 @@
             border-radius: 50%;
             left: -0.5rem;
             top: 0.25rem;
-            transform: translateX(-50%);
+            transform: translateX(-50%) scale(0);
             background-color: #e2e8f0;
             border: 3px solid #f8fafc;
+            transition: transform 0.6s var(--spring), background-color 0.3s ease;
+            transition-delay: var(--d, 0s);
+            z-index: 1;
+        }
+        .timeline-item.is-visible::before {
+            transform: translateX(-50%) scale(1);
+            background-color: var(--accent);
+            animation: dotPulse 2.4s ease-out var(--d, 0s) 1;
         }
         .timeline-item:hover::before {
-            background-color: #3b82f6;
+            background-color: #2563eb;
+            transform: translateX(-50%) scale(1.25);
         }
+        @keyframes dotPulse {
+            0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.5); }
+            100% { box-shadow: 0 0 0 14px rgba(59,130,246,0); }
+        }
+
+        /* ---------- Role card hover lift ---------- */
+        .role-toggle {
+            transition: transform 0.28s var(--spring), box-shadow 0.28s ease, background-color 0.2s ease;
+            will-change: transform;
+        }
+        .role-toggle:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 34px -16px rgba(37,99,235,0.5);
+        }
+
         .header-toggle .chevron {
-            transition: transform 0.3s ease;
+            transition: transform 0.4s var(--spring);
         }
         .header-toggle.is-open .chevron {
             transform: rotate(180deg);
         }
+
+        /* ---------- Skill tag pop ---------- */
+        .skill-tag:hover {
+            transform: translateY(-2px) scale(1.07);
+            box-shadow: 0 7px 16px -6px rgba(59,130,246,0.55);
+        }
+        .skill-tag:active {
+            transform: translateY(0) scale(0.96);
+        }
+
+        /* ---------- Animated underline for links ---------- */
+        .link-underline {
+            position: relative;
+        }
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            height: 2px;
+            width: 100%;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s var(--spring);
+        }
+        .link-underline:hover::after { transform: scaleX(1); }
+
+        /* ---------- Card entrance for the doughnut chart ---------- */
+        #skillsChart { transition: opacity 0.6s ease; }
+
+        /* ---------- Respect reduced motion ---------- */
+        @media (prefers-reduced-motion: reduce) {
+            .bg-aurora { display: none; }
+            .hero-in, .hero-name {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            .timeline-track::after {
+                transform: scaleY(1) !important;
+                transition: none !important;
+            }
+            .timeline-item::before {
+                transform: translateX(-50%) scale(1) !important;
+                transition: none !important;
+            }
+            .timeline-item.is-visible::before { animation: none !important; }
+            .role-toggle:hover { transform: none; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-700">
+    <div class="bg-aurora" aria-hidden="true"><span></span></div>
     <!-- Chosen Palette: Warm Neutrals with Blue Accent -->
     <!-- Application Structure Plan: A thematic, single-page application structure was chosen to provide a narrative-driven yet exploratory user experience. The flow starts with a high-level summary (Hero), moves to an interactive Skills Dashboard for targeted exploration, then presents a chronological Career Journey via a visual timeline. This structure allows recruiters to either follow the narrative or directly query experiences based on skills, which is a primary user task. This is more efficient than a linear document, as it answers specific queries (e.g., "show me AWS experience") instantly. The user flow is designed to be non-linear and user-driven. -->
     <!-- Visualization & Content Choices: 
@@ -46,15 +219,15 @@
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
-    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
+
         <header class="text-center mb-12">
-            <h1 class="text-4xl sm:text-5xl font-bold text-slate-900">Zain Hassan</h1>
-            <p class="mt-2 text-xl text-blue-600">Agentic Coder, Flutter & AWS</p>
-            <div class="mt-4 flex justify-center items-center space-x-4 text-sm">
-                <a href="mailto:zainhthegreat@gmail.com" class="text-slate-500 hover:text-blue-600 transition">zainhthegreat@gmail.com</a>
+            <h1 class="hero-name text-4xl sm:text-5xl font-bold text-slate-900">Zain Hassan</h1>
+            <p class="hero-in mt-2 text-xl text-blue-600" style="animation-delay: 0.15s;">Agentic Coder, Flutter & AWS</p>
+            <div class="hero-in mt-4 flex justify-center items-center space-x-4 text-sm" style="animation-delay: 0.3s;">
+                <a href="mailto:zainhthegreat@gmail.com" class="link-underline text-slate-500 hover:text-blue-600 transition">zainhthegreat@gmail.com</a>
                 <span class="text-slate-300">|</span>
-                <a href="https://www.linkedin.com/in/zain-hassan-18b845216" target="_blank" class="text-slate-500 hover:text-blue-600 transition">linkedin.com/in/zain-hassan-18b845216</a>
+                <a href="https://www.linkedin.com/in/zain-hassan-18b845216" target="_blank" class="link-underline text-slate-500 hover:text-blue-600 transition">linkedin.com/in/zain-hassan-18b845216</a>
                 <span class="text-slate-300">|</span>
                 <span class="text-slate-500">Dubai</span>
             </div>
@@ -63,14 +236,14 @@
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-1 space-y-8">
-                <section id="summary" class="bg-white p-6 rounded-lg shadow-sm">
+                <section id="summary" class="reveal bg-white p-6 rounded-lg shadow-sm" style="--d: 0.05s;">
                     <h2 class="text-lg font-bold text-slate-900 border-b pb-2 mb-4">Professional Summary</h2>
                     <p class="text-sm leading-relaxed">
                         Ex-Vibe Coder; agentic orchestration is the new race. I use long-lived agents to manage enterprise-level workflows and systems that are scalable and further manageable by humans, agentic orchestration, and the depleted term "vibe coding." The results are not a short sprint but a long-lived, stable system prone to flexibility, scale, and improvement.
                     </p>
                 </section>
 
-                 <section id="education" class="bg-white p-6 rounded-lg shadow-sm">
+                 <section id="education" class="reveal bg-white p-6 rounded-lg shadow-sm" style="--d: 0.12s;">
                     <h2 class="text-lg font-bold text-slate-900 border-b pb-2 mb-4">Education & Certifications</h2>
                     <div class="space-y-4">
                         <div>
@@ -130,7 +303,7 @@
                     </div>
                 </section>
 
-                <section id="skills" class="bg-white p-6 rounded-lg shadow-sm">
+                <section id="skills" class="reveal bg-white p-6 rounded-lg shadow-sm" style="--d: 0.19s;">
                     <h2 class="text-lg font-bold text-slate-900 border-b pb-2 mb-4">Core Skills Dashboard</h2>
                     <p class="text-sm mb-4 text-slate-500">Click a skill to filter my career journey below.</p>
                     <div class="chart-container" style="position: relative; height:250px; width:100%; max-width: 400px; margin: 0 auto 2rem auto;">
@@ -177,7 +350,7 @@
             </div>
 
             <div class="lg:col-span-2">
-                <section id="experience" class="bg-white p-6 rounded-lg shadow-sm">
+                <section id="experience" class="reveal bg-white p-6 rounded-lg shadow-sm" style="--d: 0.1s;">
                     <div class="border-b pb-2 mb-4">
                         <h2 class="text-lg font-bold text-slate-900">Career Journey</h2>
                         <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
@@ -185,7 +358,7 @@
                             Click any role to expand the details
                         </p>
                     </div>
-                    <div id="timeline-container" class="relative border-l-2 border-slate-200 pl-8 space-y-10">
+                    <div id="timeline-container" class="timeline-track relative border-l-2 border-slate-200 pl-8 space-y-10">
                     </div>
                 </section>
             </div>
@@ -296,7 +469,22 @@
         const timelineContainer = document.getElementById('timeline-container');
         const skillsContainer = document.getElementById('skills-container');
         const clearFilterBtn = document.getElementById('clear-filter');
-        
+
+        // Scroll-reveal engine: fade/slide elements in as they enter the viewport.
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
+
+        const observeReveals = () => {
+            document.querySelectorAll('.reveal:not(.is-visible), .timeline-track:not(.is-visible)')
+                .forEach(el => revealObserver.observe(el));
+        };
+
         const renderTimeline = (filterSkill = null) => {
             timelineContainer.innerHTML = '';
             const filteredData = filterSkill 
@@ -320,12 +508,13 @@
                             <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="#FBBF24" aria-hidden="true"><path d="M12 2.25l2.473 6.31 6.777.31-5.27 4.27 1.79 6.56L12 16.41l-5.77 3.29 1.79-6.56-5.27-4.27 6.777-.31z"/></svg>
                             ★ Main Role
                         </div>` : '';
-                const headerBase = 'header-toggle group cursor-pointer rounded-lg p-3 -m-3 transition-colors duration-200';
+                const headerBase = 'header-toggle role-toggle group cursor-pointer rounded-lg p-3 -m-3';
                 const headerClass = item.mainJob
                     ? `${headerBase} ring-2 ring-blue-500 ring-offset-2 bg-blue-50/40 hover:bg-blue-50`
                     : `${headerBase} hover:bg-slate-50`;
                 const timelineItem = document.createElement('div');
-                timelineItem.className = 'timeline-item relative';
+                timelineItem.className = 'timeline-item reveal relative';
+                timelineItem.style.setProperty('--d', (index * 0.09) + 's');
                 timelineItem.dataset.skills = item.skills.join(',');
 
                 timelineItem.innerHTML = `
@@ -382,6 +571,9 @@
                 panel.style.maxHeight = panel.scrollHeight + "px";
                 header.classList.add('is-open');
             }
+
+            // Animate the freshly-rendered timeline items into view.
+            observeReveals();
         };
 
         // Keep an open panel sized correctly after fonts load or the window resizes
@@ -428,52 +620,80 @@
             });
             renderTimeline();
 
-            // Chart.js implementation
-            const ctx = document.getElementById('skillsChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Mobile & Web', 'Cloud & Data', 'AI & Compliance', 'Leadership & Design'],
-                    datasets: [{
-                        label: 'Skill Categories',
-                        data: [3, 6, 2, 2],
-                        backgroundColor: [
-                            'rgba(59, 130, 246, 0.8)', // blue-500
-                            'rgba(16, 185, 129, 0.8)', // emerald-500
-                            'rgba(239, 68, 68, 0.8)', // red-500
-                            'rgba(249, 115, 22, 0.8)' // orange-500
-                        ],
-                        borderColor: '#f8fafc',
-                        borderWidth: 4,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 15,
-                                boxWidth: 12,
-                                font: {
-                                    size: 11
+            // Reveal the static cards (summary, education, skills, experience) as they scroll in.
+            observeReveals();
+
+            // Chart.js — built lazily so the doughnut draws itself when it scrolls into view.
+            let chartBuilt = false;
+            const buildChart = () => {
+                if (chartBuilt) return;
+                chartBuilt = true;
+                const ctx = document.getElementById('skillsChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mobile & Web', 'Cloud & Data', 'AI & Compliance', 'Leadership & Design'],
+                        datasets: [{
+                            label: 'Skill Categories',
+                            data: [3, 6, 2, 2],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.8)', // blue-500
+                                'rgba(16, 185, 129, 0.8)', // emerald-500
+                                'rgba(239, 68, 68, 0.8)', // red-500
+                                'rgba(249, 115, 22, 0.8)' // orange-500
+                            ],
+                            borderColor: '#f8fafc',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            animateRotate: true,
+                            animateScale: true,
+                            duration: 1400,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    boxWidth: 12,
+                                    font: {
+                                        size: 11
+                                    }
                                 }
+                            },
+                            tooltip: {
+                                bodyFont: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                padding: 10,
+                                cornerRadius: 4,
                             }
                         },
-                        tooltip: {
-                            bodyFont: {
-                                size: 14,
-                                weight: 'bold'
-                            },
-                            padding: 10,
-                            cornerRadius: 4,
-                        }
-                    },
-                    cutout: '65%'
-                }
-            });
+                        cutout: '65%'
+                    }
+                });
+            };
+
+            const chartEl = document.getElementById('skillsChart');
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduceMotion || !('IntersectionObserver' in window)) {
+                buildChart();
+            } else {
+                const chartObserver = new IntersectionObserver((entries) => {
+                    if (entries.some(e => e.isIntersecting)) {
+                        buildChart();
+                        chartObserver.disconnect();
+                    }
+                }, { threshold: 0.35 });
+                chartObserver.observe(chartEl);
+            }
         });
 
     </script>
